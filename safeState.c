@@ -51,7 +51,7 @@ void initialize()
 	}
 	for(i=0;i<no_of_pro;i++)
 	{	
-	printf("Enter the number of instances of resource already allocated to Process %d in format A B C ..\n",i+1);
+	printf("Enter the number of instances of resource already allocated to Process %d in format A B C ..\n",i);
 	for(j=0;j<no_of_res;j++)
 		{
 		scanf("%d",&alloc[i][j]);
@@ -59,10 +59,15 @@ void initialize()
 	}
 	for(i=0;i<no_of_pro;i++)
 	{	
-	printf("Enter the maximum number of instances of resource required by Process %d in format A B C ..\n",i+1);	
+	printf("Enter the maximum number of instances of resource required by Process %d in format A B C ..\n",i);	
 	for(j=0;j<no_of_res;j++)
 		{
 		scanf("%d",&max[i][j]);
+		if(max[i][j]>inst[j])
+				{
+					printf("Process is asking for invalid number of resources. Error.\n");
+					exit(0);
+				}
 		need[i][j]=max[i][j]-alloc[i][j];
 		}
 	}
@@ -113,6 +118,7 @@ for(i=0;i<no_of_pro;i++)
 void check()
 {	printf("\n");
 	int i,j,count;
+	
 	for(i=0;i<no_of_pro;i++)
 	{
 		count=0;
