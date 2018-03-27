@@ -3,7 +3,8 @@
 
 //data structure used
 int no_of_pro,no_of_res;
-int *inst,*avail_inst,**alloc,**max,**need;
+int *inst,*avail_inst,**alloc,**max,**need,*work;
+int *finish;
 
 //fxn to allot memory to all datastructre.
 void allot()
@@ -18,6 +19,8 @@ avail_inst=(int *)calloc(no_of_res,sizeof(int));
 alloc=(int **)calloc(no_of_pro,sizeof(int *));
 max=(int **)calloc(no_of_pro,sizeof(int *));
 need=(int **)calloc(no_of_pro,sizeof(int *));
+finish=(int *)calloc(no_of_pro,sizeof(int));
+work=(int *)calloc(no_of_res,sizeof(int));
 for(i=0;i<no_of_pro;i++)
 {
 	alloc[i]=(int *)calloc(no_of_res,sizeof(int));
@@ -31,6 +34,10 @@ return;
 void initialize()
 {
 	int i,j;
+	for(i=0;i<no_of_pro;i++)
+	{
+		finish[i]=0;
+	}
 	printf("Enter the total number of instances of resources in format A B C ..\n");
 	for(i=0;i<no_of_res;i++)
 	{
@@ -40,6 +47,7 @@ void initialize()
 	for(i=0;i<no_of_res;i++)
 	{
 		scanf("%d",&avail_inst[i]);
+		work[i]=avail_inst[i];
 	}
 	for(i=0;i<no_of_pro;i++)
 	{	
@@ -102,9 +110,50 @@ for(i=0;i<no_of_pro;i++)
 	}
 }	
 }
+void check()
+{	printf("\n");
+	int i,j,count;
+	for(i=0;i<no_of_pro;i++)
+	{
+		count=0;
+		if(finish[i]==0)
+		{
+			for(j=0;j<no_of_res;j++)
+			{
+				if(need[i][j]<=work[j])
+				count++;
+			}
+			if(count==no_of_res)
+			{
+				printf(" P%d \t",i);
+				finish[i]=1;
+				for(j=0;j<no_of_res;j++)
+				{	
+					work[j]=work[j]+alloc[i][j];
+				}
+				i=-1;
+			}
+		}
+	}
+	count=0;
+	for(i=0;i<no_of_pro;i++)
+	{
+		if(finish[i]==1)
+		{
+			count++;
+		}
+	}
+	if(count==no_of_pro)
+	{
+		printf("\nSafe State\n");
+	}
+	else
+	printf("\nUnsafe state\n");
+}
 int main()
 {	
 	allot();
 	initialize();
 	display();
+	check();
 }
